@@ -218,10 +218,7 @@ class endDateAction(argparse.Action):
 
 def main():
 
-    print('start of Main')
-    get_ipython().run_line_magic('matplotlib', 'qt')
-
-    lakeMap = gpd.read_file('C:/Users/sebas/lenters/hydro_p_LakeSuperior/hydro_p_LakeSuperior.shp')
+    lakeMap = gpd.read_file('./hydro_p_LakeSuperior/hydro_p_LakeSuperior.shp')
 
     aParser = argparse.ArgumentParser(description='Displays buoy location' +
                                       ' and speed data from given range')
@@ -242,7 +239,6 @@ def main():
                          metavar='api-key',
                          help='API authentication key')
 
-    print('end of arguments')
     args = aParser.parse_args()
     global API_KEY
     global START_DATE
@@ -285,6 +281,7 @@ def main():
                column = "driftSpeed", legend=True,
                legend_kwds={'label': 'Buoy Speed (m/s)'})
     ax.legend()
+    ax.set_title('Spotter Buoy Location and Speed')
 
     try:
         placeHourVector(geodf, ax)
@@ -304,7 +301,6 @@ def main():
     print('end')
 
 if __name__ == '__main__':
-    print('before main')
     main()
 else:
     print('main failed')

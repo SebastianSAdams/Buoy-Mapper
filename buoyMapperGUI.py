@@ -7,9 +7,7 @@ Created on Mon May 31 23:22:47 2021
 
 import tkinter as tk
 import warnings
-from IPython import get_ipython
 from datetime import datetime
-import pdb
 from buoyMapper import (apiGet, calcDriftSpeed, placeDayVector, placeHourVector,
                         pd, Point, gpd, plt, make_axes_locatable)
 
@@ -29,8 +27,7 @@ def endDateAction(value):
 
 def runBuoyMapper():
 
-    print('start runBuoyMapper')
-    get_ipython().run_line_magic('matplotlib', 'qt')
+    #get_ipython().run_line_magic('matplotlib', 'qt')
 
     lakeMap = gpd.read_file('./hydro_p_LakeSuperior/hydro_p_LakeSuperior.shp')
 
@@ -70,15 +67,15 @@ def runBuoyMapper():
     #geometry[:3]
 
     geodf = gpd.GeoDataFrame(df, crs = 4326, geometry = geometry)
-    geodf.head() # might not be necessary
+    #geodf.head() # might not be necessary
 
-    fig,ax = plt.subplots(figsize = (15,15))
-    lakeMap.plot(ax = ax, label = 'Buoy Position')
+    fig, ax = plt.subplots(figsize = (15,15))
+    lakeMap.plot(ax = ax)
 
     divider = make_axes_locatable(ax)
-    cax = divider.append_axes('right', size='5%', pad=0.1)
+    cax = divider.append_axes('right', size='3%', pad=-2)
 
-    geodf.plot(ax = ax, cax=cax, cmap = 'Oranges',
+    geodf.plot(ax = ax, cax = cax, cmap = 'Oranges',
                markersize = 60, marker = 's', label = 'Buoy Position',
                column = "driftSpeed", legend=True,
                legend_kwds={'label': 'Buoy Speed (m/s)'})
@@ -96,11 +93,11 @@ def runBuoyMapper():
 
     ax.set_xlabel('Longitude')
     ax.set_ylabel('Latitude')
+    ax.set_title('Spotter Buoy Location and Speed')
 
     plt.legend(prop={'size':15})
-    print('end runBuoyMapper')
+    plt.show()
 
-print('start GUI')
 root = tk.Tk()
 root.title('Buoy Mapper')
 
