@@ -32,7 +32,7 @@ def runBuoyMapper():
     print('start runBuoyMapper')
     get_ipython().run_line_magic('matplotlib', 'qt')
 
-    lakeMap = gpd.read_file('C:/Users/sebas/lenters/hydro_p_LakeSuperior/hydro_p_LakeSuperior.shp')
+    lakeMap = gpd.read_file('./hydro_p_LakeSuperior/hydro_p_LakeSuperior.shp')
 
     API_KEY = '9b5b0e8377a2805157c883a7f9d7b3'
     if apiKey.get() != '':
