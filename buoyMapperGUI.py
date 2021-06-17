@@ -9,7 +9,8 @@ import tkinter as tk
 import warnings
 from datetime import datetime
 from buoyMapper import (apiGet, calcDriftSpeed, placeDayVector, placeHourVector,
-                        pd, Point, gpd, plt, make_axes_locatable)
+                        pd, Point, gpd, plt, make_axes_locatable, getApiKey,
+                        API_TOKEN_FNAME)
 
 #10/31/2020-1:24:00AM -b 11/4/2020-6:54:00PM
 
@@ -31,9 +32,14 @@ def runBuoyMapper():
 
     lakeMap = gpd.read_file('./hydro_p_LakeSuperior/hydro_p_LakeSuperior.shp')
 
-    API_KEY = '9b5b0e8377a2805157c883a7f9d7b3'
+    API_KEY = getApiKey()
+
     if apiKey.get() != '':
         API_KEY = apiKey.get()
+
+    if API_KEY is None:
+        warnings.warn("An API key was not provided either in the input" +
+                      " field or in the API key file {}.".format(API_TOKEN_FNAME))    
 
     START_DATE = ''
     if startDate.get() != '':

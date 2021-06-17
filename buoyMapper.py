@@ -21,11 +21,16 @@ import dateutil.parser
 from datetime import datetime
 import warnings
 import argparse
+import os.path
+from os import path
 
 global API_KEY
 global START_DATE
 global END_DATE
-API_KEY = '9b5b0e8377a2805157c883a7f9d7b3'
+global API_TOKEN_FNAME
+API_TOKEN_FNAME = './apiKey.TXT'
+API_KEY = ''
+'9b5b0e8377a2805157c883a7f9d7b3'
 SPOTTER_ID = 'SPOT-0592'
 START_DATE = ''
 '20201031T012400-0400'
@@ -174,7 +179,7 @@ def apiGet(apiKey, spotID, startDate, endDate):
         }
     response = requests.get(
         url='https://api.sofarocean.com/api/wave-data',
-        params=params )
+        params=params)
     data = response.json()
     return data
 
@@ -216,6 +221,19 @@ class endDateAction(argparse.Action):
         END_DATE = datetime.strptime(values, '%m/%d/%Y-%I:%M:%S%p')
         END_DATE = END_DATE.isoformat()
 
+def getApiKey():
+    global API_TOKEN_FNAME
+    if not path.exists(API_TOKEN_FNAME):
+        return None
+    if not path.isfile(API_TOKEN_FNAME):
+        return None
+    with open(API_TOKEN_FNAME, 'r') as file:
+        apiToken = file.read()
+        if len(apiToken) == 0:
+            return None
+
+    return apiToken
+
 def main():
 
     lakeMap = gpd.read_file('./hydro_p_LakeSuperior/hydro_p_LakeSuperior.shp')
@@ -243,8 +261,16 @@ def main():
     global API_KEY
     global START_DATE
     global END_DATE
+    global API_TOKEN_FNAME
+
     if args.apikey is not None:
         API_KEY = args.apikey
+    else:
+        API_KEY = getApiKey()
+        if API_KEY is None:
+            warnings.warn("An API key was not provided either in the input" +
+                          " field or in the API key file {}.".format(API_TOKEN_FNAME))
+            raise SystemExit(1)
 
     data = apiGet(API_KEY, args.spotterid, START_DATE, END_DATE)
 
